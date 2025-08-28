@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Environment variables
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# GCP credentials
+*.json
+
+# Logs
+*.log
+logs/
+
+# Model files
+models/*.pkl
+models/*.joblib
+
+# Data files
+data/
+*.csv
+*.parquet
+
+# Terraform
+terraform/.terraform/
+*.tfstate*
+
+venv source venv/bin/activate 
+weather_ml.ipynb
+*.csv
+*.pkl
+*.ipynb_checkpoints
+art.txt
