@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:15
+    ports:
+      - "5431:5432"
+    environment:
+      #- POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./data:/var/lib/postgresql/data
+     #- ./migrations:/docker-entrypoint-initdb.d
+     #- ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+    env_file:
+      - .env
+    networks:
+      - swab-network
+    restart: unless-stopped
+  
+#  data-ingestion:
+#    build: ./data-ingestion
+#    ports:
+#      - "8001:8001"
+#    environment:
+#      WEATHER_API_KEY: ${WEATHER_API_KEY}
+#      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
+#      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${POSTGRES_DB}
+#    depends_on:
+#      - db
+#    volumes:
+#      - ./data:/app/data
+#    networks:
+#      - swab-network
+#    restart: unless-stopped
+    
+networks:
+  swab-network:
+    driver: bridge

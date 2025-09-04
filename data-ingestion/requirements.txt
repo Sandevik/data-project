@@ -4,7 +4,7 @@ certifi==2025.8.3
 charset-normalizer==3.4.3
 click==8.2.1
 dnspython==2.7.0
-email_validator==2.2.0
+email-validator==2.3.0
 fastapi==0.116.1
 fastapi-cli==0.0.8
 fastapi-cloud-cli==0.1.5
@@ -17,6 +17,7 @@ Jinja2==3.1.6
 markdown-it-py==4.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
+psycopg2==2.9.10
 pydantic==2.11.7
 pydantic_core==2.33.2
 Pygments==2.19.2
