@@ -4,7 +4,7 @@ services:
     ports:
       - "5431:5432"
     environment:
-      #- POSTGRES_USER=${DB_USER}
+      - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     volumes:
@@ -17,21 +17,21 @@ services:
       - swab-network
     restart: unless-stopped
   
-#  data-ingestion:
-#    build: ./data-ingestion
-#    ports:
-#      - "8001:8001"
-#    environment:
-#      WEATHER_API_KEY: ${WEATHER_API_KEY}
-#      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
-#      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${POSTGRES_DB}
-#    depends_on:
-#      - db
-#    volumes:
-#      - ./data:/app/data
-#    networks:
-#      - swab-network
-#    restart: unless-stopped
+  data-ingestion:
+    build: ./data-ingestion
+    ports:
+      - "8001:8001"
+    environment:
+      WEATHER_API_KEY: ${WEATHER_API_KEY}
+      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      - db
+    volumes:
+      - ./data:/app/data
+    networks:
+      - swab-network
+    restart: unless-stopped
     
 networks:
   swab-network:
