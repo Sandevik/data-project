@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS ingestion_data (
+CREATE TABLE IF NOT EXISTS weather_ingestion_data (
   uuid UUID NOT NULL DEFAULT gen_random_uuid(),
   lat FLOAT NOT NULL,
   lon FLOAT NOT NULL,
@@ -22,3 +22,21 @@ CREATE TABLE IF NOT EXISTS ingestion_data (
   ingestion_timestamp BIGINT NOT NULL,
   data_source TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS air_quality_ingestion_data (
+  uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+  lat FLOAT NOT NULL,
+  long FLOAT NOT NULL,
+  aqi SMALLINT NOT NULL,
+  co DOUBLE PRECISION NOT NULL,
+  no DOUBLE PRECISION NOT NULL,
+  no2 DOUBLE PRECISION NOT NULL,
+  o3 DOUBLE PRECISION NOT NULL,
+  so2 DOUBLE PRECISION NOT NULL,
+  pm2_5 DOUBLE PRECISION NOT NULL,
+  pm10 DOUBLE PRECISION NOT NULL,
+  nh3 DOUBLE PRECISION NOT NULL,
+  city_name TEXT NOT NULL,
+  ingestion_timestamp BIGINT NOT NULL,
+  data_source TEXT NOT NULL
+)

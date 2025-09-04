@@ -5,26 +5,15 @@ from time import time
 from requests import get, RequestException, Response
 import psycopg2
 from psycopg2.extras import execute_values
+from .DataIngestor import DataIngestor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class WeatherDataIngestion:
-    def __init__(self):
-        self.api_key = os.getenv("WEATHER_API_KEY")
-        self.conn = psycopg2.connect(os.getenv("DATABASE_URL"))
-
-        self.cities = [
-            {"name": "Stockholm", "lat": 59.3293, "lon": 18.0686},
-            {"name": "Gothenburg", "lat": 57.7089, "lon": 11.9746},
-            {"name": "Malmö", "lat": 55.6059, "lon": 13.0007},
-            {"name": "Uppsala", "lat": 59.8586, "lon": 17.6389},
-            {"name": "Linköping", "lat": 58.4108, "lon": 15.6214},
-            {"name": "Örebro", "lat": 59.2741, "lon": 15.2066},
-            {"name": "Västerås", "lat": 59.6099, "lon": 16.5448},
-            {"name": "Norrköping", "lat": 58.5877, "lon": 16.1924},
-        ]
-
+class WeatherDataIngestor(DataIngestor):
+    def __init__(self, cities: list[dict]):
+        super().__init__(cities)
+    
     def fetch_data(self, lat, lon, city_name) -> dict:
         """Fetch latest weather data from OpenWeatherMap API"""
         try:
@@ -122,7 +111,7 @@ class WeatherDataIngestion:
 
             cur = self.conn.cursor()
             query = """
-            INSERT INTO ingestion_data (
+            INSERT INTO weather_ingestion_data (
                 lat, lon, temp, feels_like, temp_min, temp_max,
                 pressure, humidity, sea_level, grnd_level, visibility,
                 wind_speed, wind_deg, clouds, weather_main, weather_description,

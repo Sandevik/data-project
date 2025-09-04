@@ -1,7 +1,8 @@
 
 from fastapi import FastAPI
 from time import time
-from ingestions.WeatherDataIngestion import WeatherDataIngestion
+from ingestions.WeatherDataIngestor import WeatherDataIngestor
+from ingestions.AirQualityDataIngestior import AirQualityIngestor
 import psycopg2
 import glob
 from dotenv import load_dotenv
@@ -13,7 +14,16 @@ DATABASE_URL=os.getenv("DATABASE_URL")
 
 app = FastAPI()
 
-
+CITIES = [
+    {"name": "Stockholm", "lat": 59.3293, "lon": 18.0686},
+    {"name": "Gothenburg", "lat": 57.7089, "lon": 11.9746},
+    {"name": "Malmö", "lat": 55.6059, "lon": 13.0007},
+    {"name": "Uppsala", "lat": 59.8586, "lon": 17.6389},
+    {"name": "Linköping", "lat": 58.4108, "lon": 15.6214},
+    {"name": "Örebro", "lat": 59.2741, "lon": 15.2066},
+    {"name": "Västerås", "lat": 59.6099, "lon": 16.5448},
+    {"name": "Norrköping", "lat": 58.5877, "lon": 16.1924},
+]
 
 @app.on_event("startup")
 def run_migrations():
@@ -50,19 +60,14 @@ def run_migrations():
 
 @app.get("/ingest")
 async def route():
-
-
-
     try: 
-        weather = WeatherDataIngestion().process_cities()
-
-        """ aq = AirQualityIngestion()
-        aq_results = aq.process_all_cities() """
+        weather = WeatherDataIngestor(CITIES).process_cities()
+        aq = AirQualityIngestor(CITIES).process_cities()
 
         return {
             "status": "Success",
             "weather": weather,
-           """  "air_quality": aq_results, """
+            "air_quality": aq,
             "timestamp": int(time())
         }
     except Exception as err:
