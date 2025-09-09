@@ -6,6 +6,7 @@ import glob
 from dotenv import load_dotenv
 import os
 from processors.WeatherDataProcessor import WeatherDataProcessor
+from processors.AirQualityProcessor import AirQualityDataProcessor
 
 load_dotenv()
 
@@ -58,4 +59,5 @@ async def route():
 
 @app.get("/process/aq")
 async def route():
-    pass
+    res = AirQualityDataProcessor().fetch_data().process_data().save_data()
+    return res.result

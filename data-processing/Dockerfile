@@ -28,8 +28,8 @@ RUN useradd --create-home --shell /bin/bash app \
 USER app
 
 # Expose port
-EXPOSE 8001
+EXPOSE 8002
 
 # Run FastAPI with uvicorn
 # Byt "app.main:app" till din faktiska modul/variabel (ex. "app:app" om din fil heter app.py)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
