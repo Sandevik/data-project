@@ -11,8 +11,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class WeatherDataIngestor(DataIngestor):
-    def __init__(self, cities: list[dict]):
+    timestamp: int
+    def __init__(self, cities: list[dict], timestamp: int = int(time())):
         super().__init__(cities)
+        self.timestamp = timestamp
     
     def fetch_data(self, lat, lon, city_name) -> dict:
         """Fetch latest weather data from OpenWeatherMap API"""
@@ -29,7 +31,7 @@ class WeatherDataIngestor(DataIngestor):
             res.raise_for_status()
             data = res.json()
 
-            data["ingestion_timestamp"] = int(time())
+            data["ingestion_timestamp"] = self.timestamp
             data["city_name"] = city_name
             data["data_source"] = "openweathermap"
             logger.info(f"Retrieved weather info for {city_name}")

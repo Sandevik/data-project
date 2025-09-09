@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:15
     ports:
-      - "5431:5432"
+      - "5431:5432" #remove "5431" on deployment to close db off to external connections!
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -23,7 +23,6 @@ services:
       - "8001:8001"
     environment:
       WEATHER_API_KEY: ${WEATHER_API_KEY}
-      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
     depends_on:
       - db
@@ -32,6 +31,21 @@ services:
     networks:
       - swab-network
     restart: unless-stopped
+
+#  data-processing:
+#    build: ./data-processing
+#    ports:
+#      - "8002:8002"
+#    environment:
+#      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+#    depends_on:
+#      - db
+#      - data-ingestion
+#    volumes:
+#      - ./data:/app/data
+#    networks:
+#      - swab-network
+#    restart: unless-stopped
     
 networks:
   swab-network:

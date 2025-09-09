@@ -8,8 +8,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class AirQualityIngestor(DataIngestor):
-    def __init__(self, cities):
+    timestamp: int
+    def __init__(self, cities, timestamp: int = int(time())):
         super().__init__(cities)
+        self.timestamp = timestamp
 
     def fetch_data(self, lat, lon, city_name):
         """Fetch air quality data from OpenWeatherMap API"""
@@ -27,7 +29,7 @@ class AirQualityIngestor(DataIngestor):
             data = res.json()
 
             # Lägg på metadata
-            data["ingestion_timestamp"] = int(time())
+            data["ingestion_timestamp"] = self.timestamp
             data["city_name"] = city_name
             data["data_source"] = "openweathermap_air_quality"
 

@@ -5,6 +5,7 @@ import psycopg2
 import glob
 from dotenv import load_dotenv
 import os
+from processors.WeatherDataProcessor import WeatherDataProcessor
 
 load_dotenv()
 
@@ -48,7 +49,8 @@ def run_migrations():
 
 @app.get("/process/weather")
 async def route():
-    pass
+    res = WeatherDataProcessor().fetch_data().process_data()
+    return res
 
 @app.get("/process/all")
 async def route():

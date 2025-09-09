@@ -61,8 +61,9 @@ def run_migrations():
 @app.get("/ingest")
 async def route():
     try: 
-        weather = WeatherDataIngestor(CITIES).process_cities()
-        aq = AirQualityIngestor(CITIES).process_cities()
+        timestamp = int(time())
+        weather = WeatherDataIngestor(CITIES, timestamp).process_cities()
+        aq = AirQualityIngestor(CITIES, timestamp).process_cities()
 
         return {
             "status": "Success",
