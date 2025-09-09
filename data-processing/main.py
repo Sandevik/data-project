@@ -49,8 +49,8 @@ def run_migrations():
 
 @app.get("/process/weather")
 async def route():
-    res = WeatherDataProcessor().fetch_data().process_data()
-    return res
+    res = WeatherDataProcessor().fetch_data().process_data().save_data()
+    return res.result
 
 @app.get("/process/all")
 async def route():

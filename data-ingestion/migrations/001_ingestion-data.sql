@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS weather_ingestion_data (
-  uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+  uuid UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   lat FLOAT NOT NULL,
   lon FLOAT NOT NULL,
   temp FLOAT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS weather_ingestion_data (
 );
 
 CREATE TABLE IF NOT EXISTS air_quality_ingestion_data (
-  uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+  uuid UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   lat FLOAT NOT NULL,
   long FLOAT NOT NULL,
   aqi SMALLINT NOT NULL,
