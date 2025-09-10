@@ -3,7 +3,6 @@ import pandas as pd
 from time import time
 from typing import TypedDict
 import json
-from psycopg2.extras import Json
 
 class UnProcessedData(TypedDict):
     city_name: str

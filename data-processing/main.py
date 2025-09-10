@@ -1,7 +1,6 @@
 
 from fastapi import FastAPI
 from time import time
-import psycopg2
 import glob
 from dotenv import load_dotenv
 import os
