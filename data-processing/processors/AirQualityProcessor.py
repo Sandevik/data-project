@@ -41,7 +41,7 @@ class AirQualityDataProcessor(DataProcessor):
         cursor.close()
         return self
 
-    def process_data(self) -> pd.DataFrame:
+    def process_data(self) -> "AirQualityDataProcessor":
         if not self.unprocessed_data:
             raise ValueError("No data to process. Fetch data first.")
         df = pd.DataFrame(self.unprocessed_data)

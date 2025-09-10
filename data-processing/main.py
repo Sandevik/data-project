@@ -5,8 +5,10 @@ import psycopg2
 import glob
 from dotenv import load_dotenv
 import os
+import json
 from processors.WeatherDataProcessor import WeatherDataProcessor
 from processors.AirQualityProcessor import AirQualityDataProcessor
+from processors.CombinedDataProcessor import CombinedDataProcessor
 
 load_dotenv()
 
@@ -50,14 +52,16 @@ def run_migrations():
 
 @app.get("/process/weather")
 async def route():
-    res = WeatherDataProcessor().fetch_data().process_data().save_data()
-    return res.result
+    processor = WeatherDataProcessor().fetch_data().process_data().save_data()
+    return processor.result
 
-@app.get("/process/all")
+@app.get("/process/combined")
 async def route():
-    pass
+    processor = CombinedDataProcessor().fetch_data().process_data().save_data()
+    # json.loads required due to FastApi returning dict automatically converts to JSON
+    return json.loads(processor.processed_data.to_json(orient="records"))
 
 @app.get("/process/aq")
 async def route():
-    res = AirQualityDataProcessor().fetch_data().process_data().save_data()
-    return res.result
+    processor = AirQualityDataProcessor().fetch_data().process_data().save_data()
+    return processor.result

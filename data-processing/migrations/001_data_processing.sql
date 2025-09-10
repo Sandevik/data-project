@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS processed_air_quality_ingestion_data (
 
 CREATE TABLE IF NOT EXISTS combined_processed_ingestion_data (
   uuid UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  processed_weather_ingestion_data_uuid UUID NOT NULL REFERENCES processed_weather_ingestion_data(uuid) ON DELETE CASCADE,
-  processed_air_quality_ingestion_data_uuid UUID NOT NULL REFERENCES processed_air_quality_ingestion_data(uuid) ON DELETE CASCADE,
+  weather_ingestion_uuid UUID NOT NULL REFERENCES weather_ingestion_data(uuid) ON DELETE CASCADE,
+  aq_ingestion_uuid UUID NOT NULL REFERENCES air_quality_ingestion_data(uuid) ON DELETE CASCADE,
   json_data JSONB,
-  combined_timestamp BIGINT NOT NULL,
-  UNIQUE (processed_weather_ingestion_data_uuid, processed_air_quality_ingestion_data_uuid, uuid)
+  ingestion_timestamp BIGINT NOT NULL,
+  UNIQUE (weather_ingestion_uuid, aq_ingestion_uuid)
 );
