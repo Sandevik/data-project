@@ -2,6 +2,7 @@ from .DataProcessor import DataProcessor
 from typing import TypedDict
 import pandas as pd
 from time import time
+import datetime
 
 class UnProcessedData(TypedDict):
     uuid: str 
@@ -35,7 +36,7 @@ class WeatherDataProcessor(DataProcessor):
     unprocessed_data: UnProcessedData | None = None
     processed_data: pd.DataFrame | None = None
 
-    def __init__(self, timestamp: int = int(time())):
+    def __init__(self, timestamp: int = int(datetime.datetime.now(tz=datetime.UTC).timestamp() * 1000)):
         super().__init__()
         self.timestamp = timestamp
 
@@ -56,6 +57,10 @@ class WeatherDataProcessor(DataProcessor):
         df = pd.DataFrame(self.unprocessed_data)
 
         df = pd.get_dummies(data=df, columns=["weather_main", "weather_description", "city_name"], drop_first=True, dtype=int)
+        
+        df["month"] = pd.to_datetime(df["ingestion_timestamp"], unit="ms").dt.month
+        df["day"] = pd.to_datetime(df["ingestion_timestamp"], unit="ms").dt.day
+        df["year"] = pd.to_datetime(df["ingestion_timestamp"], unit="ms").dt.year
 
         df.drop_duplicates(inplace=True)
         self.processed_data = df
@@ -87,7 +92,7 @@ class WeatherDataProcessor(DataProcessor):
         """
         res = []
         for _, row in self.processed_data.iterrows():
-            d_row = row.drop(labels=["uuid"])
+            d_row = row.drop(labels=["uuid", "ingestion_timestamp"])
             values = (
                 row["uuid"],
                 d_row.to_json(),

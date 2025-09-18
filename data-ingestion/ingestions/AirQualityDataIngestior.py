@@ -3,13 +3,14 @@ from time import time
 from requests import get, RequestException, Response
 from psycopg2.extras import execute_values
 from .DataIngestor import DataIngestor
+import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class AirQualityIngestor(DataIngestor):
     timestamp: int
-    def __init__(self, cities, timestamp: int = int(time())):
+    def __init__(self, cities, timestamp: int = int(datetime.datetime.now(tz=datetime.UTC).timestamp() * 1000)):
         super().__init__(cities)
         self.timestamp = timestamp
 

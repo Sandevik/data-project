@@ -7,6 +7,7 @@ import psycopg2
 import glob
 from dotenv import load_dotenv
 import os
+import datetime
 
 load_dotenv()
 
@@ -61,7 +62,7 @@ def run_migrations():
 @app.get("/ingest")
 async def route():
     try: 
-        timestamp = int(time())
+        timestamp = int(datetime.datetime.now(tz=datetime.UTC).timestamp() * 1000)
         weather = WeatherDataIngestor(CITIES, timestamp).process_cities()
         aq = AirQualityIngestor(CITIES, timestamp).process_cities()
 
@@ -69,11 +70,11 @@ async def route():
             "status": "Success",
             "weather": weather,
             "air_quality": aq,
-            "timestamp": int(time())
+            "timestamp": timestamp
         }
     except Exception as err:
         return {
             "status": "Error",
             "message": str(err),
-            "timestamp": int(time())
+            "timestamp": timestamp
         }

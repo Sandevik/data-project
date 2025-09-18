@@ -5,6 +5,7 @@ import glob
 from dotenv import load_dotenv
 import os
 import json
+import psycopg2
 from processors.WeatherDataProcessor import WeatherDataProcessor
 from processors.AirQualityProcessor import AirQualityDataProcessor
 from processors.CombinedDataProcessor import CombinedDataProcessor
@@ -57,8 +58,7 @@ async def route():
 @app.get("/process/combined")
 async def route():
     processor = CombinedDataProcessor().fetch_data().process_data().save_data()
-    # json.loads required due to FastApi returning dict automatically converts to JSON
-    return json.loads(processor.processed_data.to_json(orient="records"))
+    return processor.result
 
 @app.get("/process/aq")
 async def route():

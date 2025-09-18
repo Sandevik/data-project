@@ -3,6 +3,7 @@ import pandas as pd
 from time import time
 from typing import TypedDict
 import json
+import datetime
 
 class UnProcessedData(TypedDict):
     city_name: str
@@ -45,7 +46,7 @@ class CombinedDataProcessor(DataProcessor):
     aq_df: pd.DataFrame | None = None
     processed_data: pd.DataFrame | None = None
 
-    def __init__(self, timestamp: int = int(time())):
+    def __init__(self, timestamp: int = int(datetime.datetime.now(tz=datetime.UTC).timestamp() * 1000)):
         super().__init__()
         self.timestamp = timestamp
 
@@ -59,6 +60,7 @@ class CombinedDataProcessor(DataProcessor):
                 w.uuid AS weather_ingestion_uuid,
                 aq.uuid AS aq_ingestion_uuid,
 
+                w.ingestion_timestamp,
                 -- Weather-kolumner
                 w.lat,
                 w.lon,
@@ -121,6 +123,12 @@ class CombinedDataProcessor(DataProcessor):
 
         merged_df = pd.get_dummies(data=merged_df, columns=["weather_main", "weather_description", "city_name"], drop_first=True, dtype=int)
 
+        merged_df["month"] = pd.to_datetime(merged_df["ingestion_timestamp"], unit="ms").dt.month
+        merged_df["day"] = pd.to_datetime(merged_df["ingestion_timestamp"], unit="ms").dt.day
+        merged_df["year"] = pd.to_datetime(merged_df["ingestion_timestamp"], unit="ms").dt.year
+        
+
+
         merged_df.columns = merged_df.columns.str.replace(" ", "_")
 
         self.processed_data = merged_df
@@ -128,6 +136,7 @@ class CombinedDataProcessor(DataProcessor):
 
 
     def save_data(self) -> "CombinedDataProcessor":
+        res = []
         insert_query = """
             INSERT INTO combined_processed_ingestion_data
                 (weather_ingestion_uuid, aq_ingestion_uuid, json_data, ingestion_timestamp)
@@ -148,7 +157,7 @@ class CombinedDataProcessor(DataProcessor):
 
         cursor = self.conn.cursor()
         for _, row in self.processed_data.iterrows():
-            d_row = row.drop(labels=["weather_ingestion_uuid", "aq_ingestion_uuid"])
+            d_row = row.drop(labels=["weather_ingestion_uuid", "aq_ingestion_uuid", "ingestion_timestamp"])
             cursor.execute(
                 insert_query,
                 (
@@ -158,7 +167,10 @@ class CombinedDataProcessor(DataProcessor):
                     row["ingestion_timestamp"]
                 )
             )
+            res.append(cursor.fetchone())
+        
 
         self.conn.commit()
         cursor.close()
+        self.result = res
         return self

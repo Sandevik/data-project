@@ -9,10 +9,10 @@ from datetime import datetime
 print("🤖 Creating basic ML models for SWAB Platform...")
 
 # Create models directory
-models_dir = Path("./ml-model/models")
-models_dir.mkdir(exist_ok=True)
+models_dir = Path("./ml/models")
+models_dir.mkdir(parents=True, exist_ok=True)
 
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+timestamp = int(datetime.now().timestamp())
 
 # 1. Create a simple AQI predictor
 print("📊 Creating AQI predictor...")
@@ -73,8 +73,8 @@ print(f"📁 Models saved in: {models_dir}")
 print(f"\n🚀 Now you can start the services:")
 print("   docker-compose up -d")
 print("\n🔗 Service URLs:")
-print("   Dashboard: http://localhost:8084")
-print("   API: http://localhost:8083")
-print("   Combined ML: http://localhost:8085")
-print("   Data Ingestion: http://localhost:8080")
-print("   Data Processing: http://localhost:8081")
+print("   Dashboard: http://localhost:80")
+print("   API: http://localhost:8004")
+print("   Combined ML: http://localhost:8003")
+print("   Data Ingestion: http://localhost:8001")
+print("   Data Processing: http://localhost:8002")
