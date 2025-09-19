@@ -9,7 +9,7 @@ class Trainer(ABC):
         self.conn = psycopg2.connect(os.getenv("DATABASE_URL"))
 
     @abstractmethod
-    def fetch_data(self):
+    def fetch_training_data(self):
         pass
 
     @abstractmethod
